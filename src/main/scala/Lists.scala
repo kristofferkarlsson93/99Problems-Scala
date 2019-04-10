@@ -18,4 +18,8 @@ object Lists {
     !validation.contains(false)
   }
 
+  def compress(list: List[String]): List[String]  = {
+    list.distinct
+  }
+
 }

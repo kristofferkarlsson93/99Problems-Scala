@@ -35,4 +35,17 @@ class ListsSpec extends WordSpec with Matchers {
       result shouldEqual false
     }
   }
+
+  "compress" should {
+    "when given a list of 3 elements where 2 is the same should return a list of 2" in {
+      val list = List("a", "b", "b")
+      val result = Lists.compress(list)
+      result shouldEqual List("a", "b")
+    }
+    "when given a list of 4 element where 2 is same but does not come in order should preserve order" in {
+      val list = List("c", "a", "c", "a")
+      val result = Lists.compress(list)
+      result shouldEqual List("c", "a")
+    }
+  }
 }
