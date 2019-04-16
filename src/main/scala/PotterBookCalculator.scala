@@ -1,5 +1,5 @@
 
-case class PotterBook(name: String)
+class PotterBook(name: String)
 
 case object PhilosophersStone extends PotterBook("Philosophers stone")
 
@@ -14,7 +14,11 @@ case object OrderOfThePhenix extends PotterBook("Order of the phenix")
 class PotterBookCalculator {
 
   def calculate(books: Seq[PotterBook]): Double = {
-    if (books.length == 2) (8 * 2) * 0.95
+
+    if (books.length == 2) {
+      if (books.distinct.length == 2)  (8 * 2) * 0.95
+      else 8
+    }
     else if (books.length == 3) (8 * 3) * 0.90
     else if (books.length == 4) (8 * 4) * 0.8
     else if (books.length == 5) (8 * 5) * 0.75
