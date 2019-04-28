@@ -1,5 +1,5 @@
 
-import scala.collection.immutable.Map
+import scala.collection.mutable
 
 class PotterBook(name: String) {
   def getName: String = name
@@ -17,51 +17,53 @@ case object OrderOfThePhoenix extends PotterBook("Order of the phenix")
 
 class PotterBookCalculator {
 
-  def countBooks(books: Seq[PotterBook]): Map[PotterBook, Int] = {
-    var result = Map.empty[PotterBook, Int]
+  def calculate(books: Seq[PotterBook]): Double = {
+    val countedBooks = countBooks(books)
+    val bookSets = pairSets(countedBooks)
+
+    bookSets.map(getPriceForSet).sum
+  }
+
+  private def countBooks(books: Seq[PotterBook]): mutable.Map[PotterBook, Int] = {
+    val result = mutable.Map.empty[PotterBook, Int]
     books.foreach((book: PotterBook) => {
       result.get(book) match {
-        case Some(count: Int) => {
-//          result(book) = count += 1
-          result += book -> count += 1
-        }
+        case Some(count: Int) => result(book) = count + 1
         case None => result(book) = 1
       }
     })
-    println(result)
     result
   }
 
-  def calculate(books: Seq[PotterBook]): Double = {
+  private def pairSets(purchase: mutable.Map[PotterBook, Int]): Seq[mutable.Set[PotterBook]] = {
+    val numberOfSets: Int = purchase.maxBy(_._2)._2
 
-    countBooks(books)
-
-
-//    val bookSets = joinSets(books)
-    if (books.length == 2) {
-      if (books.distinct.length == 2) (8 * 2) * 0.95
-      else 8
+    var result = Seq.empty[mutable.Set[PotterBook]]
+    for (_ <- 0 until numberOfSets) {
+      val currentSet = mutable.Set.empty[PotterBook]
+      purchase.foreach {
+        case (potterBook: PotterBook, numberOf: Int) => {
+          if (numberOf > 0 && !currentSet(potterBook)) {
+            currentSet += potterBook
+            purchase(potterBook) = numberOf - 1
+          }
+        }
+      }
+      result = result :+ currentSet
     }
-    else if (books.length == 3) (8 * 3) * 0.90
-    else if (books.length == 4) (8 * 4) * 0.8
-    else if (books.length == 5) (8 * 5) * 0.75
-    else 8
+    result
   }
 
-  def joinSets(books: Seq[PotterBook]) = {
-    val set = Set.empty[PotterBook]
-    val sets = Seq.empty[Set[PotterBook]]
-    books.foreach(book => {
-      if (!set.contains(book)) {
-        println("book is not in set")
-        set + book
-        println(set)
-      } else {
-        println("book is in set")
-        sets ++: Set(book)
+  private def getPriceForSet: mutable.Set[PotterBook] => Double = {
+    set: mutable.Set[PotterBook] => {
+      if (set.size == 2) {
+        (8 * 2) * 0.95
       }
-    })
-    println(sets)
+      else if (set.size == 3) (8 * 3) * 0.90
+      else if (set.size == 4) (8 * 4) * 0.8
+      else if (set.size == 5) (8 * 5) * 0.75
+      else 8
+    }
   }
 }
 

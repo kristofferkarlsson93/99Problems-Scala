@@ -44,13 +44,40 @@ class PotterBookCalculatorSpec extends WordSpec with Matchers {
       val calculator = new PotterBookCalculator
       val books = Seq(PhilosophersStone, PhilosophersStone)
       val result = calculator.calculate(books)
-      result shouldEqual 8
+      result shouldEqual 16
     }
-    "=>return 5 percent discount per set when 2 of the first and 2 of the second books are bought" in {
+    "return 5 percent discount per set when 2 of the first and 2 of the second books are bought" in {
       val calculator = new PotterBookCalculator
       val books = Seq(PhilosophersStone, PhilosophersStone, ChamberOfSecrets, ChamberOfSecrets)
       val result = calculator.calculate(books)
       result shouldEqual 30.4
+    }
+    "return 25 percent discount per set when 2 of all books are bought" in {
+      val calculator = new PotterBookCalculator
+      val books = Seq(
+        PhilosophersStone,
+        ChamberOfSecrets,
+        PrisonerOfAzkaban,
+        GobletOfFire,
+        OrderOfThePhoenix,
+        PhilosophersStone,
+        ChamberOfSecrets,
+        PrisonerOfAzkaban,
+        GobletOfFire,
+        OrderOfThePhoenix
+      )
+      val result = calculator.calculate(books)
+      result shouldEqual 60.00
+    }
+    "return 10 % on first set and 5% o second when buying 1 Philosophers stone and 2 Chamber of secrets" in {
+      val calculator = new PotterBookCalculator
+      val books = Seq(
+        PhilosophersStone,
+        ChamberOfSecrets,
+        ChamberOfSecrets
+      )
+      val result = calculator.calculate(books)
+      result shouldEqual 15.2 + 8
     }
   }
 
